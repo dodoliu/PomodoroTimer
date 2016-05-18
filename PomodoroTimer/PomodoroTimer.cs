@@ -23,16 +23,16 @@ namespace PomodoroTimer
         private System.Timers.Timer breakTimer = null;
 
         #region Test
-        ////每次工作30分钟
-        //private int iWorkInterval = 1000 * 10;
-        ////每次休息5分钟
-        //private int iBreakInterval = 1000 * 5;
+        //每次工作30分钟
+        private int iWorkInterval = 1000 * 10;
+        //每次休息5分钟
+        private int iBreakInterval = 1000 * 5;
         #endregion
 
-        //每次工作30分钟
-        private int iWorkInterval = 1000 * 60 * 30;
-        //每次休息5分钟
-        private int iBreakInterval = 1000 * 60 * 5;
+        ////每次工作30分钟
+        //private int iWorkInterval = 1000 * 60 * 30;
+        ////每次休息5分钟
+        //private int iBreakInterval = 1000 * 60 * 5;
 
         private delegate void MainTimerDelegate();
         private MainTimerDelegate mainTimerDelegate = null;
@@ -70,14 +70,16 @@ namespace PomodoroTimer
         }
 
         private void WorkTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {            
-            MessageBox.Show("啊啊啊啊啊啊,你还不站起来,扭扭脖子动动腿!", "保命提示!请浪5分钟!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);    
+        {
+            if (CheckAlarmTime())
+            {
+                MessageBox.Show("啊啊啊啊啊啊,你还不站起来,扭扭脖子动动腿!", "保命提示!请浪5分钟!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-            this.Invoke(addDatePointDelegate);
+                this.Invoke(addDatePointDelegate);
 
-            workTimer.Stop();
-            BreakTimerStart();
-
+                workTimer.Stop();
+                BreakTimerStart();
+            }
         }
 
         private void BreakTimerStart()
@@ -90,10 +92,13 @@ namespace PomodoroTimer
 
         private void BreakTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            MessageBox.Show("休息结束,请干活!", "保命提示!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            if (CheckAlarmTime())
+            {
+                MessageBox.Show("休息结束,请干活!", "保命提示!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
-            breakTimer.Stop();
-            WorkTimerStart();
+                breakTimer.Stop();
+                WorkTimerStart();
+            }
         }
 
         private void MainTimerStart()
@@ -153,7 +158,6 @@ namespace PomodoroTimer
             }
         }
 
-
         private void InitTimer(string name,ref System.Timers.Timer timer,int iInterval)
         {
             timer = new System.Timers.Timer();
@@ -203,5 +207,25 @@ namespace PomodoroTimer
                 e.Cancel = true;
             }
         }
+
+        /// <summary>
+        /// 如果是晚上的10点到早上的9点,不报警
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckAlarmTime()
+        {
+            bool _bool = true;
+            DateTime nowTime = DateTime.Now;
+            DateTime beginTime = new DateTime(nowTime.Year, nowTime.Month, nowTime.Day, 22, 0, 0);
+            DateTime nowTimeEnd = beginTime.AddDays(1);
+            DateTime endTime = new DateTime(nowTimeEnd.Year, nowTimeEnd.Month, nowTimeEnd.Day, 9, 0, 0);
+            if (nowTime >= beginTime && nowTime <= endTime)
+            {
+                _bool = false;
+            }
+            return _bool;
+        }
+
+
     }
 }
