@@ -15,6 +15,9 @@ namespace PomodoroTimer
         private int iDateMinute = 0;
         private int iDateSecond = 0;
 
+        //当前对话框是否点了确定,如果没有点确定,则不再弹出第二个对话框
+        private string currDialogResult = "OK";
+
         private System.Timers.Timer mainTimer = null;
 
         //工作时间
@@ -23,16 +26,16 @@ namespace PomodoroTimer
         private System.Timers.Timer breakTimer = null;
 
         #region Test
-        //每次工作30分钟
-        private int iWorkInterval = 1000 * 10;
-        //每次休息5分钟
-        private int iBreakInterval = 1000 * 5;
+        ////每次工作30分钟
+        //private int iWorkInterval = 1000 * 10;
+        ////每次休息5分钟
+        //private int iBreakInterval = 1000 * 5;
         #endregion
 
-        ////每次工作30分钟
-        //private int iWorkInterval = 1000 * 60 * 30;
-        ////每次休息5分钟
-        //private int iBreakInterval = 1000 * 60 * 5;
+        //每次工作30分钟
+        private int iWorkInterval = 1000 * 60 * 30;
+        //每次休息5分钟
+        private int iBreakInterval = 1000 * 60 * 5;
 
         private delegate void MainTimerDelegate();
         private MainTimerDelegate mainTimerDelegate = null;
@@ -71,14 +74,19 @@ namespace PomodoroTimer
 
         private void WorkTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (CheckAlarmTime())
+            if (currDialogResult == "OK")
             {
-                MessageBox.Show("啊啊啊啊啊啊,你还不站起来,扭扭脖子动动腿!", "保命提示!请浪5分钟!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                currDialogResult = "";
+                if (CheckAlarmTime())
+                {
+                    var tmpResult = MessageBox.Show("啊啊啊啊啊啊,你还不站起来,扭扭脖子动动腿!", "保命提示!请站立5分钟!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    currDialogResult = tmpResult.ToString();
 
-                this.Invoke(addDatePointDelegate);
+                    this.Invoke(addDatePointDelegate);
 
-                workTimer.Stop();
-                BreakTimerStart();
+                    workTimer.Stop();
+                    BreakTimerStart();
+                }
             }
         }
 
@@ -92,12 +100,17 @@ namespace PomodoroTimer
 
         private void BreakTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (CheckAlarmTime())
+            if (currDialogResult == "OK")
             {
-                MessageBox.Show("休息结束,请干活!", "保命提示!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                currDialogResult = "";
+                if (CheckAlarmTime())
+                {
+                    var tmpResult = MessageBox.Show("站立结束!", "保命提示!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    currDialogResult = tmpResult.ToString();
 
-                breakTimer.Stop();
-                WorkTimerStart();
+                    breakTimer.Stop();
+                    WorkTimerStart();
+                }
             }
         }
 
