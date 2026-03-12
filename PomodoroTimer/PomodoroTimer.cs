@@ -79,7 +79,7 @@ namespace PomodoroTimer
                 currDialogResult = "";
                 if (CheckAlarmTime())
                 {
-                    var tmpResult = MessageBox.Show("啊啊啊啊啊啊,你还不站起来,扭扭脖子动动腿!", "保命提示!请站立5分钟!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    var tmpResult = MessageBox.Show("啊啊啊啊啊啊,你还不站起来,扭扭脖子动动腿!", "保命提示!请站立5分钟!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3, MessageBoxOptions.DefaultDesktopOnly);
                     currDialogResult = tmpResult.ToString();
 
                     this.Invoke(addDatePointDelegate);
@@ -105,7 +105,7 @@ namespace PomodoroTimer
                 currDialogResult = "";
                 if (CheckAlarmTime())
                 {
-                    var tmpResult = MessageBox.Show("站立结束!", "保命提示!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    var tmpResult = MessageBox.Show("站立结束!", "保命提示!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button3, MessageBoxOptions.DefaultDesktopOnly);
                     currDialogResult = tmpResult.ToString();
 
                     breakTimer.Stop();
